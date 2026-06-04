@@ -24,9 +24,31 @@ def settings():
     root_settings.config(bg="#2F2F2F")
     root_settings.title("Settings")
 
+Task_height = 580
+Task_width = 400
+
+Time_until_height = 280
+Time_until_width = 570
+
+Time_left_height = 280
+Time_left_width = 570
+
 root = tk.Tk()
-root.geometry("580x355")
+root.geometry("1000x600")
 root.config(bg="#2F2F2F")
+root.title("Simple To-Do")
+
+tasks_canvas = tk.Canvas(root, bg="#292929", width=Task_width, height=Task_height)
+tasks_canvas.propagate(False)
+tasks_canvas.place(x=10, y=10, width=Task_width, height=Task_height)
+
+time_until_canvas = tk.Canvas(root, bg="#292929", width=Time_until_width, height=Time_until_height)
+time_until_canvas.propagate(False)
+time_until_canvas.place(x=420, y=10, width=Time_until_width, height=Time_until_height)
+
+time_left_canvas = tk.Canvas(root, bg="#292929", width=Time_left_width, height=Time_left_height)
+time_left_canvas.propagate(False)
+time_left_canvas.place(x=420, y=310, width=Time_left_width, height=Time_left_height)
 
 menubar = tk.Menu(root)
 
