@@ -42,6 +42,9 @@ tasks_canvas = tk.Canvas(root, bg="#292929", width=Task_width, height=Task_heigh
 tasks_canvas.propagate(False)
 tasks_canvas.place(x=10, y=10, width=Task_width, height=Task_height)
 
+task_title = tasks_canvas.create_text(40,20, text="Tasks:", fill="white", font=("Arial", 16, "normal"))
+
+
 time_until_canvas = tk.Canvas(root, bg="#292929", width=Time_until_width, height=Time_until_height)
 time_until_canvas.propagate(False)
 time_until_canvas.place(x=420, y=10, width=Time_until_width, height=Time_until_height)
