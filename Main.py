@@ -1,5 +1,6 @@
 import tkinter as tk
 import json
+from PIL import Image, ImageTk
 
 needed_data = {
     "Tasks": ["Example 1", "Example 2"]
@@ -24,6 +25,9 @@ def settings():
     root_settings.config(bg="#2F2F2F")
     root_settings.title("Settings")
 
+def edit_tasks():
+    print("Placeholder")
+
 Task_height = 580
 Task_width = 400
 
@@ -42,8 +46,13 @@ tasks_canvas = tk.Canvas(root, bg="#292929", width=Task_width, height=Task_heigh
 tasks_canvas.propagate(False)
 tasks_canvas.place(x=10, y=10, width=Task_width, height=Task_height)
 
-task_title = tasks_canvas.create_text(40,20, text="Tasks:", fill="white", font=("Arial", 16, "normal"))
+task_title = tasks_canvas.create_text(40,20, text="Tasks:", fill="white", font=("Arial", 15, "normal"))
 
+original_edit_image = Image.open("Simple To Do/EditIcon.png")
+edit_image = ImageTk.PhotoImage(original_edit_image.resize((30, 30)))
+edit_button = tk.Label(root, image=edit_image, bg="#292929")
+edit_button.place(x=360, y=10)
+edit_button.bind("<Button-1>", edit_tasks())
 
 time_until_canvas = tk.Canvas(root, bg="#292929", width=Time_until_width, height=Time_until_height)
 time_until_canvas.propagate(False)
