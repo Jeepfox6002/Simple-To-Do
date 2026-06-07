@@ -16,10 +16,6 @@ Task_panel_height = 150
 
 p = "Placeholder"
 
-needed_data = {
-    "Tasks": []
-}
-
 def get_time():
     now = datetime.now()
     current_time = now.strftime("%H:%M")
@@ -39,7 +35,7 @@ root.config(bg="#2F2F2F")
 root.title("Simple To-Do")
 root.resizable(False, False)
 
-tasks_canvas = tk.Canvas(root, bg="#292929", width=Task_width, height=Task_height)
+tasks_canvas = tk.Canvas(root, bg="#292929", width=Task_width, height=Task_height, highlightbackground="#1a1a1a")
 tasks_canvas.propagate(False)
 tasks_canvas.place(x=10, y=10, width=Task_width, height=Task_height)
 
@@ -56,11 +52,11 @@ add_button = tk.Label(root, image=add_image, bg="#292929")
 add_button.place(x=320, y=15)
 add_button.bind("<Button-1>", add_tasks)
 
-time_until_canvas = tk.Canvas(root, bg="#292929", width=Time_until_width, height=Time_until_height)
+time_until_canvas = tk.Canvas(root, bg="#292929", width=Time_until_width, height=Time_until_height, highlightbackground="#1a1a1a")
 time_until_canvas.propagate(False)
 time_until_canvas.place(x=420, y=10, width=Time_until_width, height=Time_until_height)
 
-time_left_canvas = tk.Canvas(root, bg="#292929", width=Time_left_width, height=Time_left_height)
+time_left_canvas = tk.Canvas(root, bg="#292929", width=Time_left_width, height=Time_left_height, highlightbackground="#1a1a1a")
 time_left_canvas.propagate(False)
 time_left_canvas.place(x=420, y=310, width=Time_left_width, height=Time_left_height)
 
