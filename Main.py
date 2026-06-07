@@ -1,59 +1,71 @@
 import tkinter as tk
-import json
-from tkinter import Tk
+from PIL import Image, ImageTk
+from add_task import add_tasks
+from datetime import datetime
+
+Task_height = 580
+Task_width = 400
+
+Time_until_height = 280
+Time_until_width = 570
+
+Time_left_height = 280
+Time_left_width = 570
+
+Task_panel_height = 150
 
 p = "Placeholder"
 
-def save_file():
-    with open("data.json", "w") as file:
-        json.dump(needed_data, file, indent=4, sort_keys=True)
+needed_data = {
+    "Tasks": []
+}
 
+def get_time():
+    now = datetime.now()
+    current_time = now.strftime("%H:%M")
 
-def submit_task_add(event=None):
+def settings():
+    root_settings = tk.Toplevel(root)
+    root_settings.geometry("300x200")
+    root_settings.config(bg="#2F2F2F")
+    root_settings.title("Settings")
+
+def edit_tasks(event=None):
     print(p)
 
-def add_tasks(event=None):
-    root_add_task = tk.Tk()
-    root_add_task.geometry("450x325")
-    root_add_task.config(bg="#2F2F2F")
-    root_add_task.title("Add task")
+root = tk.Tk()
+root.geometry("1000x600")
+root.config(bg="#2F2F2F")
+root.title("Simple To-Do")
+root.resizable(False, False)
 
-    task_name = tk.Entry(root_add_task, bg="#292929")
-    task_name.place(x=10,y=10, width=430,height=40)
-    placeholder = "Type the name of your task here!"
-    task_name.insert(0,placeholder)
-    name = task_name.get()
-    def remove_placeholder(event):
-        if name == placeholder:
-            task_name.delete(0,tk.END)
-    task_name.bind("<FocusIn>",remove_placeholder)
+tasks_canvas = tk.Canvas(root, bg="#292929", width=Task_width, height=Task_height)
+tasks_canvas.propagate(False)
+tasks_canvas.place(x=10, y=10, width=Task_width, height=Task_height)
 
-    selection_one = tk.Label(root_add_task,bg="#292929",fg="White",text="When will this task start?")
-    selection_one.place(x=10, y=60, height=40, width=170)
+task_title = tasks_canvas.create_text(40,20, text="Tasks:", fill="white", font=("Arial", 15, "normal"))
 
-    at_hour = tk.Entry(root_add_task, bg="#292929")
-    at_hour.place(x=190,y=60,height=40,width=70)
-    at_hour.insert(0, "Hour")
+original_edit_image = Image.open("EditIcon.png")
+original_add_image = Image.open("AddIcon.png")
+add_image = ImageTk.PhotoImage(original_add_image.resize((30, 30)))
+edit_image = ImageTk.PhotoImage(original_edit_image.resize((30, 30)))
+edit_button = tk.Label(root, image=edit_image, bg="#292929")
+edit_button.place(x=360, y=15)
+edit_button.bind("<Button-1>", edit_tasks)
+add_button = tk.Label(root, image=add_image, bg="#292929")
+add_button.place(x=320, y=15)
+add_button.bind("<Button-1>", add_tasks)
 
-    at_minute = tk.Entry(root_add_task, bg="#292929")
-    at_minute.place(x=270,y=60,width=70,height=40)
-    at_minute.insert(0,"Minute")
+time_until_canvas = tk.Canvas(root, bg="#292929", width=Time_until_width, height=Time_until_height)
+time_until_canvas.propagate(False)
+time_until_canvas.place(x=420, y=10, width=Time_until_width, height=Time_until_height)
 
-    hour = at_hour.get()
-    minute = at_minute.get()
+time_left_canvas = tk.Canvas(root, bg="#292929", width=Time_left_width, height=Time_left_height)
+time_left_canvas.propagate(False)
+time_left_canvas.place(x=420, y=310, width=Time_left_width, height=Time_left_height)
 
-    def remove_hour_place(event):
-        if hour == "Hour":
-            at_hour.delete(0, tk.END)
-    at_hour.bind("<FocusIn>", remove_hour_place)
+root.lift()
+root.attributes('-topmost', True)
+root.after_idle(root.attributes, '-topmost', False)
 
-    def remove_minute_place(event):
-        if minute == "Minute":
-            at_minute.delete(0,tk.END)
-    at_minute.bind("<FocusIn>",remove_minute_place)
-
-    submit = tk.Label(root_add_task,bg="#292929", text="Submit",fg="White")
-    submit.place(x=370,y=285,width=70,height=30)
-    submit.bind("<Button-1>", submit_task_add)
-
-    root_add_task.mainloop()
+root.mainloop()
