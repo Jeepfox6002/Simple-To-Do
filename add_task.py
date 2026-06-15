@@ -4,13 +4,6 @@ from tkinter import Tk
 
 p = "Placeholder"
 
-save_data = {
-
-}
-
-def submit_task_add(event=None):
-    print(p)
-
 def add_tasks(event=None):
     root_add_task = tk.Tk()
     root_add_task.geometry("450x325")
@@ -21,9 +14,8 @@ def add_tasks(event=None):
     task_name.place(x=10,y=10, width=430,height=40)
     placeholder = "Type the name of your task here!"
     task_name.insert(0,placeholder)
-    name = task_name.get()
     def remove_placeholder(event):
-        if name == placeholder:
+        if task_name.get() == placeholder:
             task_name.delete(0,tk.END)
     task_name.bind("<FocusIn>",remove_placeholder)
 
@@ -38,21 +30,36 @@ def add_tasks(event=None):
     at_minute.place(x=270,y=60,width=70,height=40)
     at_minute.insert(0,"Minute")
 
-    hour = at_hour.get()
-    minute = at_minute.get()
-
     def remove_hour_place(event):
-        if hour == "Hour":
+        if at_hour.get() == "Hour":
             at_hour.delete(0, tk.END)
     at_hour.bind("<FocusIn>", remove_hour_place)
 
     def remove_minute_place(event):
-        if minute == "Minute":
+        if at_minute.get() == "Minute":
             at_minute.delete(0,tk.END)
     at_minute.bind("<FocusIn>",remove_minute_place)
+
+    def submit_task_add(event=None):
+
+        try:
+            with open("Tasks.json", "r") as file:
+                task_data = json.load(file)
+        except (FileNotFoundError, json.JSONDecodeError):
+            task_data = {}
+
+        task_name_value = task_name.get()
+        task_data[task_name_value] = {
+            "Hours": at_hour.get(),
+            "Minutes": at_minute.get()
+        }
+        with open("Tasks.json", "w") as file:
+            json.dump(task_data, file, indent=4)
 
     submit = tk.Label(root_add_task,bg="#292929", text="Submit",fg="White")
     submit.place(x=370,y=285,width=70,height=30)
     submit.bind("<Button-1>", submit_task_add)
+
+
 
     root_add_task.mainloop()
