@@ -2,6 +2,7 @@ import tkinter as tk
 from PIL import Image, ImageTk
 from add_task import add_tasks
 from datetime import datetime
+import json
 
 Task_height = 580
 Task_width = 400
@@ -19,6 +20,14 @@ p = "Placeholder"
 def get_time():
     now = datetime.now()
     current_time = now.strftime("%H:%M")
+
+def sync_task():
+    with open("Tasks.json", "r") as file:
+        Task_data = json.load(file)
+
+    Hours = Task_data["Hours"]
+    Minutes = Task_data["Minutes"]
+    Task_Name = Task_data
 
 def settings():
     root_settings = tk.Toplevel(root)
