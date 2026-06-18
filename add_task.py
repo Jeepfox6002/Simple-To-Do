@@ -10,7 +10,7 @@ def add_tasks(sync_task, event=None):
     root_add_task.config(bg="#2F2F2F")
     root_add_task.title("Add task")
 
-    task_name = tk.Entry(root_add_task, bg="#292929", highlightbackground="#1a1a1a", highlightcolor="#1a1a1a", highlightthickness=2, fg="White", bd=0)
+    task_name = tk.Entry(root_add_task, bg="#292929", highlightbackground="#1a1a1a", highlightcolor="#1a1a1a", highlightthickness=2, fg="White", bd=0, font=("Arial", 10))
     task_name.place(x=10,y=10, width=430,height=40)
     placeholder = "Type the name of your task here!"
     task_name.insert(0,placeholder)
@@ -19,14 +19,14 @@ def add_tasks(sync_task, event=None):
             task_name.delete(0,tk.END)
     task_name.bind("<FocusIn>",remove_placeholder)
 
-    selection_one = tk.Label(root_add_task,bg="#292929",fg="White",text="When will this task start?", highlightbackground="#1a1a1a", highlightthickness=2)
+    selection_one = tk.Label(root_add_task,bg="#292929",fg="White",text="When will this task start?", highlightbackground="#1a1a1a", highlightthickness=2, font=("Arial", 10))
     selection_one.place(x=10, y=60, height=40, width=170)
 
-    at_hour = tk.Entry(root_add_task, bg="#292929", highlightbackground="#1a1a1a",highlightcolor="#1a1a1a", highlightthickness=2, fg="White", bd=0)
+    at_hour = tk.Entry(root_add_task, bg="#292929", highlightbackground="#1a1a1a",highlightcolor="#1a1a1a", highlightthickness=2, fg="White", bd=0,font=("Arial", 10))
     at_hour.place(x=190,y=60,height=40,width=70)
     at_hour.insert(0, "Hour")
 
-    at_minute = tk.Entry(root_add_task, bg="#292929", highlightbackground="#1a1a1a", highlightcolor="#1a1a1a", highlightthickness=2, fg="White", bd=0)
+    at_minute = tk.Entry(root_add_task, bg="#292929", highlightbackground="#1a1a1a", highlightcolor="#1a1a1a", highlightthickness=2, fg="White", bd=0, font=("Arial", 10))
     at_minute.place(x=270,y=60,width=70,height=40)
     at_minute.insert(0,"Minute")
 
@@ -75,21 +75,25 @@ def add_tasks(sync_task, event=None):
         except (FileNotFoundError, json.JSONDecodeError):
             task_data = {}
 
+        if task_data:
+            current_task_id = max(map(int, task_data.keys()), default=-1) + 1
+        else:
+            current_task_id = 0
+
         task_name_value = task_name.get()
-        task_data[task_name_value] = {
+        task_data[current_task_id] = {
             "Hours": at_hour.get(),
             "Minutes": at_minute.get(),
-            "Time of day": time_day.get()
+            "Time of day": time_day.get(),
+            "Task_Name": task_name_value
         }
         with open("Tasks.json", "w") as file:
             json.dump(task_data, file, indent=4)
 
         sync_task()
 
+        root_add_task.destroy()
+
     submit = tk.Label(root_add_task,bg="#292929", text="Submit",fg="White", highlightbackground="#1a1a1a", highlightthickness=2)
     submit.place(x=10,y=110,width=430,height=40)
     submit.bind("<Button-1>", submit_task_add)
-
-
-
-    root_add_task.mainloop()
