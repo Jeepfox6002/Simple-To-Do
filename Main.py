@@ -4,8 +4,8 @@ from add_task import add_tasks
 from datetime import datetime
 import json
 
-Task_height = 580
-Task_width = 400
+Task_height = 50
+Task_width = 380
 
 Time_until_height = 280
 Time_until_width = 570
@@ -15,19 +15,49 @@ Time_left_width = 570
 
 Task_panel_height = 150
 
+panel_number = 0
+
 p = "Placeholder"
 
 def get_time():
     now = datetime.now()
     current_time = now.strftime("%H:%M")
 
+def add_task_panel(hours,minutes,time_of_day,task_name):
+    global panel_number
+    new_panel = tk.Canvas(tasks_Frame, bg="#292929", width=Task_width, height=Task_height, highlightbackground="#1a1a1a", highlightthickness=2)
+    #y = 35 + panel_number * Task_height + 10
+    y = 35 + panel_number * (Task_height + 10)
+    new_panel.place(x=10, y=y, width=Task_width, height=Task_height, anchor="nw")
+
+    if hours == "Hour" or minutes == "Minute":
+        return
+
+    try:
+        hours = int(hours)
+        minutes = int(minutes)
+    except ValueError:
+        return
+
+    formated_time = f"{hours}:{str(minutes).zfill(2)} {time_of_day}"
+
+    new_panel.create_text(5,5,text=task_name,font=("Arial", 11), anchor="nw")
+    new_panel.create_text(5,20,text="This task happens at: " + formated_time,font=("Arial", 11), anchor="nw")
+
+    panel_number += 1
+
 def sync_task():
     with open("Tasks.json", "r") as file:
-        Task_data = json.load(file)
+        task_data = json.load(file)
 
-    Hours = Task_data["Hours"]
-    Minutes = Task_data["Minutes"]
-    Task_Name = Task_data
+    for widget in tasks_Frame.winfo_children():
+        widget.destroy()
+
+    global panel_number
+    panel_number = 0
+
+    for task_id, info in task_data.items():
+        add_task_panel(info["Hours"],info["Minutes"],info["Time of day"],info["Task_Name"])
 
 def settings():
     root_settings = tk.Toplevel(root)
@@ -44,11 +74,12 @@ root.config(bg="#2F2F2F")
 root.title("Simple To-Do")
 root.resizable(False, False)
 
-tasks_canvas = tk.Canvas(root, bg="#292929", width=Task_width, height=Task_height, highlightbackground="#1a1a1a")
-tasks_canvas.propagate(False)
-tasks_canvas.place(x=10, y=10, width=Task_width, height=Task_height)
+tasks_Frame = tk.Frame(root, bg="#292929", width=400, height=580, highlightbackground="#1a1a1a", highlightcolor="#1a1a1a",highlightthickness=2)
+tasks_Frame.propagate(False)
+tasks_Frame.place(x=10, y=10, width=400, height=580)
 
-task_title = tasks_canvas.create_text(40,20, text="Tasks:", fill="white", font=("Arial", 15, "normal"))
+task_title = tk.Label(root, bg="#292929",fg="White",text="Tasks:", highlightbackground="#1a1a1a", highlightthickness=2, font=("Arial", 15))
+task_title.place(x=10, y=10, width=75, height=30)
 
 original_edit_image = Image.open("EditIcon.png")
 original_add_image = Image.open("AddIcon.png")
@@ -59,13 +90,13 @@ edit_button.place(x=360, y=15)
 edit_button.bind("<Button-1>", edit_tasks)
 add_button = tk.Label(root, image=add_image, bg="#292929")
 add_button.place(x=320, y=15)
-add_button.bind("<Button-1>", add_tasks)
+add_button.bind("<Button-1>", lambda event: add_tasks(sync_task, event))
 
-time_until_canvas = tk.Canvas(root, bg="#292929", width=Time_until_width, height=Time_until_height, highlightbackground="#1a1a1a")
+time_until_canvas = tk.Canvas(root, bg="#292929", width=Time_until_width, height=Time_until_height, highlightbackground="#1a1a1a", highlightthickness=2)
 time_until_canvas.propagate(False)
 time_until_canvas.place(x=420, y=10, width=Time_until_width, height=Time_until_height)
 
-time_left_canvas = tk.Canvas(root, bg="#292929", width=Time_left_width, height=Time_left_height, highlightbackground="#1a1a1a")
+time_left_canvas = tk.Canvas(root, bg="#292929", width=Time_left_width, height=Time_left_height, highlightbackground="#1a1a1a", highlightthickness=2)
 time_left_canvas.propagate(False)
 time_left_canvas.place(x=420, y=310, width=Time_left_width, height=Time_left_height)
 
