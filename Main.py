@@ -21,7 +21,9 @@ p = "Placeholder"
 
 def get_time():
     now = datetime.now()
-    current_time = now.strftime("%H:%M")
+    current_time = now.strftime("%H:%M:%p")
+    clock_until.config(text=current_time)
+    root.after(1000, get_time)
 
 def add_task_panel(hours,minutes,time_of_day,task_name):
     global panel_number
@@ -41,8 +43,8 @@ def add_task_panel(hours,minutes,time_of_day,task_name):
 
     formated_time = f"{hours}:{str(minutes).zfill(2)} {time_of_day}"
 
-    new_panel.create_text(5,5,text=task_name,font=("Arial", 11), anchor="nw")
-    new_panel.create_text(5,20,text="This task happens at: " + formated_time,font=("Arial", 11), anchor="nw")
+    new_panel.create_text(5,5,text=task_name,font=("Arial", 11), anchor="nw", fill="white")
+    new_panel.create_text(5,20,text="This task happens at: " + formated_time,font=("Arial", 11), anchor="nw", fill="white")
 
     panel_number += 1
 
@@ -96,6 +98,12 @@ time_until_canvas = tk.Canvas(root, bg="#292929", width=Time_until_width, height
 time_until_canvas.propagate(False)
 time_until_canvas.place(x=420, y=10, width=Time_until_width, height=Time_until_height)
 
+clock_label = tk.Label(root, text="Current Time: ", bg="#292929", fg="white", font=("Arial", 20))
+clock_label.place(x=560, y=15, width=300, height=100)
+clock_until = tk.Label(root, text="", bg="#292929", fg="white", font=("Arial", 30), highlightbackground="#1a1a1a", highlightthickness=2)
+clock_until.place(x=420, y=10, width=Time_until_width, height=Time_until_height)
+clock_label.lift(clock_until)
+
 time_left_canvas = tk.Canvas(root, bg="#292929", width=Time_left_width, height=Time_left_height, highlightbackground="#1a1a1a", highlightthickness=2)
 time_left_canvas.propagate(False)
 time_left_canvas.place(x=420, y=310, width=Time_left_width, height=Time_left_height)
@@ -103,5 +111,8 @@ time_left_canvas.place(x=420, y=310, width=Time_left_width, height=Time_left_hei
 root.lift()
 root.attributes('-topmost', True)
 root.after_idle(root.attributes, '-topmost', False)
+
+sync_task()
+get_time()
 
 root.mainloop()
